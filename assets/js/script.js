@@ -112,7 +112,7 @@ $(".list-group").on("click", "span", function () {
 });
 
 // value of due date was changed
-$(".list-group").on("change", "input[type='text']", function() {
+$(".list-group").on("change", "input[type='text']", function () {
   var date = $(this).val();
 
   var status = $(this).closest(".list-group").attr("id").replace("list-", "");
@@ -135,15 +135,22 @@ $(".card .list-group").sortable({
   helper: "clone",
   activate: function (event) {
     console.log("activate", this);
+    $(this).addClass("dropover");
+    $(".bottom-trash").addClass("bottom-trash-drag")
   },
   deactivate: function (event) {
     console.log("deactivate", this);
+    $(this).removeClass("dropover")
+    $(".bottom-trash").removeClass("bottom-trash-drag")
   },
   over: function (event) {
     console.log("over", event.target);
+    $(event.target).addClass("dropover-active")
+    $(".bottom-trash").addClass("bottom-trash-active")
   },
   out: function (event) {
     console.log("out", event.target);
+    $(".bottom-trash").removeClass("bottom-trash-active")
   },
   update: function (event) {
     // array to store the task data in
@@ -261,6 +268,13 @@ var auditTask = function (taskEl) {
     $(taskEl).addClass("list-group-item-warning");
   }
 };
+
+// reloads tasks every 5 seconds
+setInterval(function () {
+  $(".card .list-group-item").each(function (el) {
+    auditTask(el);
+  });
+}, 1800000);
 
 // load tasks for the first time
 loadTasks();
